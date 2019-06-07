@@ -1,0 +1,10 @@
+D:\Studia\Semestr 4\Programowanie\Saper\Saper\bin\Debug\Saper.exe.config
+D:\Studia\Semestr 4\Programowanie\Saper\Saper\bin\Debug\Saper.exe
+D:\Studia\Semestr 4\Programowanie\Saper\Saper\bin\Debug\Saper.pdb
+D:\Studia\Semestr 4\Programowanie\Saper\Saper\obj\Debug\Saper.csprojAssemblyReference.cache
+D:\Studia\Semestr 4\Programowanie\Saper\Saper\obj\Debug\Saper.Form1.resources
+D:\Studia\Semestr 4\Programowanie\Saper\Saper\obj\Debug\Saper.Properties.Resources.resources
+D:\Studia\Semestr 4\Programowanie\Saper\Saper\obj\Debug\Saper.csproj.GenerateResource.cache
+D:\Studia\Semestr 4\Programowanie\Saper\Saper\obj\Debug\Saper.csproj.CoreCompileInputs.cache
+D:\Studia\Semestr 4\Programowanie\Saper\Saper\obj\Debug\Saper.exe
+D:\Studia\Semestr 4\Programowanie\Saper\Saper\obj\Debug\Saper.pdb
