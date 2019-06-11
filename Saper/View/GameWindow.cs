@@ -42,7 +42,7 @@ namespace Saper.View
         }
 
         public event Action Loaded;
-        public event Action TimeStarted;
+        public event Action<int, int> GameStarted;
         public event Action<int,int> Dig;
         public event Action<int,int> FlagToggled;
         public event Action GameEnded;
@@ -66,7 +66,7 @@ namespace Saper.View
             int x = e.X;
             int y = e.Y;
 
-            TimeStarted?.Invoke();
+            GameStarted?.Invoke(x, y);
 
             //togle flag
             if (e.Button == MouseButtons.Right)

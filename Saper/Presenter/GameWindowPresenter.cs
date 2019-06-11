@@ -18,7 +18,7 @@ namespace Saper.Presenter
         {
             this.view = view;
             this.model = model;
-            this.view.TimeStarted += StartTime;
+            this.view.GameStarted += StartGame;
             this.view.GameTime.Tick += new EventHandler(GetTime);
             this.view.Loaded += LoadBoard;
             this.view.Dig += Dig;
@@ -33,12 +33,12 @@ namespace Saper.Presenter
             view.DrawTiles(model.LoadFullBoard());
         }
 
-        private void StartTime()
+        private void StartGame(int x, int y)
         {
             view.GameTime.Enabled = true;
             view.GameTime.Start(); 
             model.StartTimer();
-            view.Time = model.GetTime().ToString();   
+            view.Time = model.GetTime().ToString();
         }
 
         private void GetTime(object sender, EventArgs e)
@@ -48,17 +48,35 @@ namespace Saper.Presenter
 
         private void Dig(int x, int y)
         {
-            view.DrawTiles(model.ShowFields(x, y));
-
-            foreach (var item in model.ShowFields(x, y))
+            if (model.GameStatus() == null)
             {
-                Console.WriteLine($"[{item.X},{item.Y}, {System.IO.Path.GetFileNameWithoutExtension(item.Path)}]");
+                view.DrawTiles(model.ShowFields(x, y));
             }
+            if (model.GameStatus() == true)
+            {
+                Console.WriteLine("You won!");
+            }
+            else if (model.GameStatus() == false)
+            {
+                Console.WriteLine("You loose!");
+            }
+
         }
 
         private void ToggleFlag(int x, int y)
         {
-            view.DrawTiles(model.ToggleFlag(x, y));
+            if (model.GameStatus() == null)
+            {
+                view.DrawTiles(model.ToggleFlag(x, y));
+            }
+            if (model.GameStatus() == true)
+            {
+                Console.WriteLine("You Won!");
+            }
+            else if (model.GameStatus() == false)
+            {
+                Console.WriteLine("You loose!");
+            }
         }
         
         private void EndGame()

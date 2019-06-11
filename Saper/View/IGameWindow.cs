@@ -15,7 +15,7 @@ namespace Saper.View
         void DrawTiles(List<Tile> tilesToDraw);
 
         event Action Loaded;
-        event Action TimeStarted;
+        event Action<int, int> GameStarted;
         event Action<int, int> Dig;
         event Action<int, int> FlagToggled;
         event Action GameEnded;

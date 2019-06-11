@@ -13,6 +13,8 @@ namespace Saper.Model
 
         private const int bombsAmount = 10;
         private List<Coords> BombsCoords;
+        private int uncoveredFields = 0;
+        private bool isGameLost = false;
         private bool endGameFlag = true;
         private bool timerFlag = true;
         private int startTime;
@@ -25,7 +27,7 @@ namespace Saper.Model
         public string[,] GameBoard { get; set; }
         public string[,] PlayerBoard { get; set; }
         public int Size { get; } = 10;
-        private int flagsMarked { get; set; } = 0;
+        public int FlagsMarked { get; set; } = 0;
 
         #endregion
 
@@ -72,6 +74,7 @@ namespace Saper.Model
                     iter++;
                 }
             }
+            Console.WriteLine("bombs planted");
         }
 
         private void InitializeBoard()
@@ -87,12 +90,14 @@ namespace Saper.Model
                     {
                         try
                         {
-                            GameBoard[x + i, y + j] = (Convert.ToInt16(GameBoard[x + i, y + j]) + 1).ToString();
+                            if (GameBoard[x + i, y + j] != "#")
+                            {
+                                GameBoard[x + i, y + j] = (Convert.ToInt16(GameBoard[x + i, y + j]) + 1).ToString();
+                            }
                         }
                         catch (Exception)
                         {
-                            //exception means, that conversion was unsuccessful, because element was a bomb ("#")
-                            //or index was out of range, which again makes no problem
+                            //exception means, that index was out of range, which acually isn't a problem
                         }
                     }
                 }
@@ -125,13 +130,13 @@ namespace Saper.Model
             {
                 PlayerBoard[y, x] = "F";
                 tile.Add(new Tile(x, y, $@"bitmaps\fieldF.bmp"));
-                flagsMarked++;
+                FlagsMarked++;
             }
             else if(PlayerBoard[y, x] == "F")
             {
                 PlayerBoard[y, x] = " ";
                 tile.Add(new Tile(x, y, $@"bitmaps\field .bmp"));
-                flagsMarked--;
+                FlagsMarked--;
             }
 
             return tile;
@@ -143,66 +148,81 @@ namespace Saper.Model
             x = x / 25;
             y = y / 25;
 
+            if (uncoveredFields + FlagsMarked == 100)
+            {
+                Console.WriteLine("Wygrałeś");
+            }
             return FindNextEmpty(x, y);
         }
 
         private List<Tile> FindNextEmpty(int x, int y)
         {
             List<Tile> uncovered = new List<Tile>();
+
             try
             {
+                //empty field uncovered
                 if (GameBoard[y, x] == "0" && PlayerBoard[y, x] == " ")
                 {
                     PlayerBoard[y, x] = GameBoard[y, x];
                     uncovered.Add(new Tile(x, y, $@"bitmaps\field{PlayerBoard[y, x]}.bmp"));
-                    //if (x < Size - 1) FindNextEmpty(x++, y);
-                    //if (y > 0) FindNextEmpty(x, y--);
-                    //if (x > 0) FindNextEmpty(x--, y);
-                    //if (y < Size - 1) FindNextEmpty(x, y++);
-                    //if (x < Size - 1 && y < Size - 1) FindNextEmpty(x++, y++);
-                    //if (x > 0 && y > 0) FindNextEmpty(x--, y--);
-                    //if (x > 0 && y < Size - 1) FindNextEmpty(x--, y++);
-                    //if (x < Size - 1 && y > 0) FindNextEmpty(x++, y--);
+                    uncoveredFields++;
 
-                    foreach (Tile tile in FindNextEmpty(x++, y))
+                    if (x < Size - 1)
+                        foreach (Tile tile in FindNextEmpty(x + 1, y))
+                            uncovered.Add(tile);
+
+                    if (y > 0)
+                        foreach (Tile tile in FindNextEmpty(x, y - 1))
+                            uncovered.Add(tile);
+
+                    if (x > 0)
+                        foreach (Tile tile in FindNextEmpty(x - 1, y))
+                            uncovered.Add(tile);
+
+                    if (y < Size - 1)
+                        foreach (Tile tile in FindNextEmpty(x, y + 1))
                         uncovered.Add(tile);
 
-                    foreach (Tile tile in FindNextEmpty(x, y--))
-                        uncovered.Add(tile);
+                    if (x < Size - 1 && y < Size - 1)
+                        foreach (Tile tile in FindNextEmpty(x + 1, y + 1))
+                            uncovered.Add(tile);
 
-                    foreach (Tile tile in FindNextEmpty(x--, y))
-                        uncovered.Add(tile);
+                    if (x > 0 && y > 0)
+                        foreach (Tile tile in FindNextEmpty(x - 1, y - 1))
+                            uncovered.Add(tile);
 
-                    foreach (Tile tile in FindNextEmpty(x, y++))
-                        uncovered.Add(tile);
+                    if (x > 0 && y < Size - 1)
+                        foreach (Tile tile in FindNextEmpty(x - 1, y + 1))
+                            uncovered.Add(tile);
 
-                    foreach (Tile tile in FindNextEmpty(x++, y++))
-                        uncovered.Add(tile);
-
-                    foreach (Tile tile in FindNextEmpty(x--, y--))
-                        uncovered.Add(tile);
-
-                    foreach (Tile tile in FindNextEmpty(x--, y++))
-                        uncovered.Add(tile);
-
-                    foreach (Tile tile in FindNextEmpty(x++, y--))
-                        uncovered.Add(tile);
+                    if (x < Size - 1 && y > 0)
+                        foreach (Tile tile in FindNextEmpty(x + 1, y - 1))
+                            uncovered.Add(tile);
                 }
-                else if (PlayerBoard[y, x] != "F" && PlayerBoard[y, x] != "#")
+                //number uncovered
+                else if (GameBoard[y, x] != "#" && PlayerBoard[y, x] == " ")
                 {
+                    PlayerBoard[y, x] = GameBoard[y, x];      
+                    uncovered.Add(new Tile(x, y, $@"bitmaps\field{PlayerBoard[y, x]}.bmp"));
+                    uncoveredFields++;
+                }
+                //bomb uncovered
+                else if (GameBoard[y, x] == "#" && PlayerBoard[y, x] == " ")
+                {
+                    isGameLost = true;
                     PlayerBoard[y, x] = GameBoard[y, x];
-                    if (PlayerBoard[y, x] == "#") uncovered.Add(new Tile(x, y, $@"bitmaps\field#red.bmp"));
-                    else uncovered.Add(new Tile(x, y, $@"bitmaps\field{PlayerBoard[y, x]}.bmp"));
+                    uncovered.Add(new Tile(x, y, $@"bitmaps\field#red.bmp"));
                 }
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 //IndexOutOfRangeException, no problem
-                Console.WriteLine($"Exception [{x}, {y}] - {exc.Message}");
             }
 
             return uncovered;
         }
+
 
         public void ClearBoard()
         {
@@ -238,11 +258,25 @@ namespace Saper.Model
             return bombs;
         }
 
+        public bool? GameStatus()
+        {
+            //true - won
+            //false - lost
+            //null - still in progress
+
+            if (uncoveredFields + FlagsMarked == 100 && FlagsMarked == bombsAmount) return true;
+            else if (isGameLost) return false;
+            else return null;
+        } 
+
         public void ResetGame()
         {
-            flagsMarked = 0;
+            FlagsMarked = 0;
+            uncoveredFields = 0;
             timerFlag = true;
             endGameFlag = true;
+            isGameLost = false;
+            BombsCoords.Clear();
             ClearBoard();
             PlantBombs();
             InitializeBoard();
