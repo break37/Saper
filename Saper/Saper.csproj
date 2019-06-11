@@ -46,21 +46,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="IGameBoard.cs" />
-    <Compile Include="IView.cs" />
-    <Compile Include="MainPresenter.cs" />
-    <Compile Include="Model.cs" />
+    <Compile Include="Model\Coords.cs" />
+    <Compile Include="Model\MainModel.cs" />
+    <Compile Include="Presenter\GameWindowPresenter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="Tile.cs" />
+    <Compile Include="View\GameWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\GameWindow.Designer.cs">
+      <DependentUpon>GameWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\IGameBoardPanel.cs" />
+    <Compile Include="View\IGameWindow.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -70,6 +69,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="View\GameWindow.resx">
+      <DependentUpon>GameWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -83,5 +85,21 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Bitmaps\basicDown.bmp" />
+    <Content Include="Bitmaps\basicUp.bmp" />
+    <Content Include="Bitmaps\field#.bmp" />
+    <Content Include="Bitmaps\field0.bmp" />
+    <Content Include="Bitmaps\field1.bmp" />
+    <Content Include="Bitmaps\field2.bmp" />
+    <Content Include="Bitmaps\field3.bmp" />
+    <Content Include="Bitmaps\field4.bmp" />
+    <Content Include="Bitmaps\field5.bmp" />
+    <Content Include="Bitmaps\field6.bmp" />
+    <Content Include="Bitmaps\field7.bmp" />
+    <Content Include="Bitmaps\field8.bmp" />
+    <Content Include="Bitmaps\fieldF.bmp" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

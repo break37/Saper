@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Saper.Model;
+using Saper.View;
+using Saper.Presenter;
 
 namespace Saper
 {
@@ -16,7 +19,13 @@ namespace Saper
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            IGameWindow view = new GameWindow();
+            MainModel model = new MainModel();
+
+            GameWindowPresenter presenter = new GameWindowPresenter(view, model);
+
+            Application.Run((GameWindow)view);
         }
     }
 }
